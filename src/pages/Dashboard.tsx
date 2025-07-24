@@ -80,7 +80,7 @@ const Dashboard: React.FC = () => {
                 <Shield className="w-4 h-4" />
               </Button>
               <div className="text-sm text-muted-foreground">
-                Francesco Casella
+                Marco Paolo Nava
               </div>
             </div>
           </div>
