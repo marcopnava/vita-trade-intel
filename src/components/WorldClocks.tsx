@@ -64,23 +64,23 @@ export const WorldClocks: React.FC = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-5 gap-4 w-full max-w-4xl">
-      {marketClocks.map((market) => (
-        <Card key={market.city} className="p-4 bg-card/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all duration-300">
-          <div className="text-center space-y-2">
+    <div className="vita-card p-6 max-w-4xl mx-auto">
+      <div className="grid grid-cols-5 gap-6">
+        {marketClocks.map((market) => (
+          <div key={market.city} className="text-center space-y-3">
             <div className="flex items-center justify-center space-x-2">
               <Clock className="w-4 h-4 text-primary" />
-              <span className="text-xs font-medium text-foreground">
+              <span className="text-trading-xs text-foreground">
                 {market.city}
               </span>
             </div>
-            <div className="text-lg font-mono text-primary">
+            <div className="text-lg font-mono text-primary font-medium">
               {times[market.city] || '00:00:00'}
             </div>
             <div className="flex items-center justify-center space-x-1">
               <div 
                 className={`w-2 h-2 rounded-full ${
-                  marketStatus[market.city] ? 'bg-green-500' : 'bg-red-500'
+                  marketStatus[market.city] ? 'bg-success' : 'bg-destructive'
                 }`}
               />
               <span className="text-xs text-muted-foreground">
@@ -88,8 +88,8 @@ export const WorldClocks: React.FC = () => {
               </span>
             </div>
           </div>
-        </Card>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

@@ -19,34 +19,23 @@ export const VitaLogo: React.FC<VitaLogoProps> = ({ size = 'md', showText = true
   };
 
   return (
-    <div className="flex items-center space-x-3">
+    <div className="flex flex-col items-center space-y-2">
       <div className={`${sizeClasses[size]} relative`}>
-        {/* Horizontal sliced design inspired by the reference */}
-        <div className="absolute inset-0 overflow-hidden rounded-full bg-vita-gradient">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute bg-background/20 h-px left-0 right-0"
-              style={{
-                top: `${(i + 1) * 8}%`,
-                transform: `translateX(${i % 2 === 0 ? '0' : '10'}%)`,
-                width: i % 2 === 0 ? '100%' : '80%'
-              }}
-            />
-          ))}
-        </div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-primary-foreground font-bold text-xs">VA</span>
+        {/* Circular logo with VA letters matching mockup */}
+        <div className="absolute inset-0 rounded-full border border-primary bg-background/50 backdrop-blur-sm">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-primary font-semibold text-xs tracking-wider">VA</span>
+          </div>
         </div>
       </div>
       {showText && (
-        <div className="flex flex-col">
-          <span className={`font-bold text-primary ${textSizeClasses[size]}`}>
+        <div className="text-center">
+          <div className={`font-semibold text-primary ${textSizeClasses[size]} tracking-wider`}>
             VITA
-          </span>
-          <span className="text-xs text-muted-foreground -mt-1">
+          </div>
+          <div className="text-xs text-muted-foreground tracking-wide uppercase">
             Virtual Investment Technology Assistant
-          </span>
+          </div>
         </div>
       )}
     </div>

@@ -1,57 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 220 13% 8%;
-    --foreground: 210 40% 98%;
-
-    --card: 220 13% 12%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 220 13% 12%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 237 68% 57%;
+    /* VITA Color System - Minimalist Trading Theme */
+    --background: 218 23% 8%;              /* Deep charcoal */
+    --foreground: 213 15% 85%;             /* Soft white */
+    
+    --card: 218 20% 12%;                   /* Slightly lighter than bg */
+    --card-foreground: 213 15% 85%;
+    
+    --popover: 218 20% 12%;
+    --popover-foreground: 213 15% 85%;
+    
+    --primary: 217 91% 60%;                /* VITA Blue accent */
     --primary-foreground: 210 40% 98%;
-
-    --secondary: 220 13% 16%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 220 13% 16%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 191 68% 75%;
-    --accent-foreground: 220 13% 8%;
-
-    --destructive: 0 62.8% 30.6%;
+    
+    --secondary: 217 10% 20%;              /* Muted gray */
+    --secondary-foreground: 213 15% 85%;
+    
+    --muted: 217 10% 15%;                  /* Subtle backgrounds */
+    --muted-foreground: 213 10% 60%;      /* Muted text */
+    
+    --accent: 217 20% 18%;                 /* Hover states */
+    --accent-foreground: 213 15% 85%;
+    
+    --destructive: 0 62% 55%;              /* Error red */
     --destructive-foreground: 210 40% 98%;
+    
+    --border: 217 15% 20%;                 /* Subtle borders */
+    --input: 217 15% 20%;
+    --ring: 217 91% 60%;                   /* Focus rings */
+    
+    /* Status Colors */
+    --success: 142 76% 36%;                /* Market open green */
+    --warning: 38 92% 50%;                 /* Warning amber */
+    --info: 217 91% 60%;                   /* Info blue */
+    
+    /* VITA Gradients & Effects */
+    --vita-gradient: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 70%));
+    --vita-glow: 0 0 20px hsl(217 91% 60% / 0.3);
+    --vita-shadow: 0 4px 12px hsl(218 23% 4% / 0.8);
+    
+    --radius: 8px;
 
-    --border: 220 13% 20%;
-    --input: 220 13% 16%;
-    --ring: 237 68% 57%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 220 13% 8%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 237 68% 57%;
+    --sidebar-background: 218 23% 8%;
+    --sidebar-foreground: 213 15% 85%;
+    --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 220 13% 16%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 220 13% 20%;
-    --sidebar-ring: 237 68% 57%;
-
-    /* VITA Design System */
-    --vita-gradient: linear-gradient(135deg, hsl(237 68% 57%), hsl(191 68% 75%));
-    --vita-glow: 0 0 20px hsl(237 68% 57% / 0.3);
-    --vita-shadow: 0 4px 20px hsl(220 13% 4% / 0.5);
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --sidebar-accent: 217 20% 18%;
+    --sidebar-accent-foreground: 213 15% 85%;
+    --sidebar-border: 217 15% 20%;
+    --sidebar-ring: 217 91% 60%;
   }
 
   .dark {
@@ -97,8 +99,91 @@ All colors MUST be HSL.
   * {
     @apply border-border;
   }
-
+  
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-inter;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+  }
+  
+  /* Custom scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50;
+  }
+}
+
+@layer components {
+  /* Typography Scale */
+  .text-trading-lg {
+    @apply text-2xl font-medium tracking-tight;
+  }
+  
+  .text-trading-md {
+    @apply text-lg font-medium;
+  }
+  
+  .text-trading-sm {
+    @apply text-sm font-medium;
+  }
+  
+  .text-trading-xs {
+    @apply text-xs font-medium tracking-wide uppercase;
+  }
+  
+  /* Layout Components */
+  .vita-container {
+    @apply max-w-7xl mx-auto px-6;
+  }
+  
+  .vita-card {
+    @apply bg-card border border-border rounded-xl backdrop-blur-sm;
+  }
+  
+  .vita-card-hover {
+    @apply vita-card hover:border-primary/30 transition-all duration-200;
+  }
+  
+  /* Status Indicators */
+  .status-open {
+    @apply bg-success/20 text-success border-success/30;
+  }
+  
+  .status-closed {
+    @apply bg-destructive/20 text-destructive border-destructive/30;
+  }
+  
+  .status-maintenance {
+    @apply bg-warning/20 text-warning border-warning/30;
+  }
+}
+
+@layer utilities {
+  .font-inter {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  
+  .bg-vita-gradient {
+    background: var(--vita-gradient);
+  }
+  
+  .shadow-vita-glow {
+    box-shadow: var(--vita-glow);
+  }
+  
+  .shadow-vita {
+    box-shadow: var(--vita-shadow);
   }
 }
