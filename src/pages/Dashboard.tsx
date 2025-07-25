@@ -6,8 +6,18 @@ import { Button } from '@/components/ui/button';
 
 const Dashboard: React.FC = () => {
   const handleNavigation = (module: string) => {
-    console.log(`Navigating to ${module} module`);
-    // TODO: Implement navigation logic
+    const routes: { [key: string]: string } = {
+      services: '/portfolio',
+      markets: '/analytics', 
+      analytics: '/ai-engine',
+      governance: '/governance',
+      setup: '/protocol',
+      platform: '/communication'
+    };
+    
+    if (routes[module]) {
+      window.location.href = routes[module];
+    }
   };
 
   const getCurrentDate = () => {
