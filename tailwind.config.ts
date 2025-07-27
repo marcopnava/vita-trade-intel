@@ -19,7 +19,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				inter: ['Inter', 'sans-serif'],
+				grotesk: ['Space Grotesk', 'sans-serif'],
+				'avant-garde': ['ITC Avant Garde Gothic Pro', 'Space Grotesk', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

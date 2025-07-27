@@ -1,59 +1,59 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* VITA Color System - Minimalist Trading Theme */
-    --background: 218 23% 8%;              /* Deep charcoal */
-    --foreground: 213 15% 85%;             /* Soft white */
+    /* VITA Official Color System - Based on Brand Guidelines */
+    --background: 220 26% 6%;              /* Deep navy background */
+    --foreground: 210 20% 92%;             /* Clean white text */
     
-    --card: 218 20% 12%;                   /* Slightly lighter than bg */
-    --card-foreground: 213 15% 85%;
+    --card: 220 22% 9%;                    /* Card backgrounds */
+    --card-foreground: 210 20% 92%;
     
-    --popover: 218 20% 12%;
-    --popover-foreground: 213 15% 85%;
+    --popover: 220 22% 9%;
+    --popover-foreground: 210 20% 92%;
     
-    --primary: 217 91% 60%;                /* VITA Blue accent */
-    --primary-foreground: 210 40% 98%;
+    --primary: 244 57% 41%;                /* VITA Primary #2E3192 */
+    --primary-foreground: 210 20% 98%;
     
-    --secondary: 217 10% 20%;              /* Muted gray */
-    --secondary-foreground: 213 15% 85%;
+    --secondary: 220 14% 15%;              /* Muted backgrounds */
+    --secondary-foreground: 210 15% 85%;
     
-    --muted: 217 10% 15%;                  /* Subtle backgrounds */
-    --muted-foreground: 213 10% 60%;      /* Muted text */
+    --muted: 220 14% 12%;                  /* Subtle elements */
+    --muted-foreground: 220 9% 55%;       /* Muted text */
     
-    --accent: 217 20% 18%;                 /* Hover states */
-    --accent-foreground: 213 15% 85%;
+    --accent: 190 85% 65%;                 /* VITA Cyan accent */
+    --accent-foreground: 220 26% 6%;
     
-    --destructive: 0 62% 55%;              /* Error red */
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;              /* Error states */
+    --destructive-foreground: 210 20% 98%;
     
-    --border: 217 15% 20%;                 /* Subtle borders */
-    --input: 217 15% 20%;
-    --ring: 217 91% 60%;                   /* Focus rings */
+    --border: 220 13% 18%;                 /* Subtle borders */
+    --input: 220 13% 18%;
+    --ring: 244 57% 41%;                   /* Focus rings */
     
-    /* Status Colors */
-    --success: 142 76% 36%;                /* Market open green */
+    /* Trading Status Colors */
+    --success: 142 71% 45%;                /* Profit green */
     --warning: 38 92% 50%;                 /* Warning amber */
-    --info: 217 91% 60%;                   /* Info blue */
+    --info: 190 85% 65%;                   /* Info cyan */
     
-    /* VITA Gradients & Effects */
-    --vita-gradient: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 70%));
-    --vita-glow: 0 0 20px hsl(217 91% 60% / 0.3);
-    --vita-shadow: 0 4px 12px hsl(218 23% 4% / 0.8);
+    /* VITA Brand Effects */
+    --vita-gradient: linear-gradient(135deg, hsl(244 57% 41%), hsl(190 85% 65%));
+    --vita-glow: 0 0 24px hsl(244 57% 41% / 0.4);
+    --vita-shadow: 0 8px 32px hsl(220 26% 3% / 0.8);
     
-    --radius: 8px;
+    --radius: 12px;
 
-    --sidebar-background: 218 23% 8%;
-    --sidebar-foreground: 213 15% 85%;
-    --sidebar-primary: 217 91% 60%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 217 20% 18%;
-    --sidebar-accent-foreground: 213 15% 85%;
-    --sidebar-border: 217 15% 20%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-background: 220 26% 6%;
+    --sidebar-foreground: 210 20% 92%;
+    --sidebar-primary: 244 57% 41%;
+    --sidebar-primary-foreground: 210 20% 98%;
+    --sidebar-accent: 220 14% 15%;
+    --sidebar-accent-foreground: 210 15% 85%;
+    --sidebar-border: 220 13% 18%;
+    --sidebar-ring: 244 57% 41%;
   }
 
   .dark {
@@ -101,7 +101,7 @@
   }
   
   body {
-    @apply bg-background text-foreground font-inter;
+    @apply bg-background text-foreground font-grotesk;
     font-feature-settings: "rlig" 1, "calt" 1;
     overflow-x: hidden;
   }
@@ -171,8 +171,12 @@
 }
 
 @layer utilities {
-  .font-inter {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  .font-grotesk {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  
+  .font-avant-garde {
+    font-family: 'ITC Avant Garde Gothic Pro', 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   }
   
   .bg-vita-gradient {

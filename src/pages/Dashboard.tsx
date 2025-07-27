@@ -1,23 +1,23 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 import { VitaLogo } from '@/components/VitaLogo';
 import { WorldClocks } from '@/components/WorldClocks';
 import { StatusPill } from '@/components/StatusPill';
 import { Button } from '@/components/ui/button';
+import { LogOut } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const handleNavigation = (module: string) => {
-    const routes: { [key: string]: string } = {
-      services: '/portfolio',
-      markets: '/analytics', 
-      analytics: '/ai-engine',
-      governance: '/governance',
-      setup: '/protocol',
-      platform: '/communication'
-    };
-    
-    if (routes[module]) {
-      window.location.href = routes[module];
-    }
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  const handleNavigation = (route: string) => {
+    navigate(route);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   const getCurrentDate = () => {
@@ -30,9 +30,29 @@ const Dashboard: React.FC = () => {
     });
   };
 
-
   return (
     <div className="min-h-screen bg-background">
+      {/* Header with user info and logout */}
+      <header className="border-b border-border">
+        <div className="vita-container py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <VitaLogo size="sm" showText={false} />
+            <div className="text-sm text-muted-foreground">
+              Welcome back, {user?.name}
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleLogout}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
+        </div>
+      </header>
+
       {/* Main Content */}
       <main className="vita-container py-16 space-y-12">
         {/* Header Section */}
@@ -49,20 +69,20 @@ const Dashboard: React.FC = () => {
 
         {/* Status Pills */}
         <div className="flex flex-wrap justify-center gap-4">
-          <StatusPill variant="success" onClick={() => handleNavigation('services')}>
-            Servizi base
+          <StatusPill variant="success" onClick={() => handleNavigation('/portfolio')}>
+            Portfolio Tracking
           </StatusPill>
-          <StatusPill variant="info" onClick={() => handleNavigation('markets')}>
-            Mercati finanziari
+          <StatusPill variant="info" onClick={() => handleNavigation('/analytics')}>
+            Market Analytics
           </StatusPill>
-          <StatusPill variant="warning" onClick={() => handleNavigation('analytics')}>
-            AI & Analytics
+          <StatusPill variant="warning" onClick={() => handleNavigation('/ai-engine')}>
+            AI Trade Engine
           </StatusPill>
-          <StatusPill variant="success" onClick={() => handleNavigation('governance')}>
-            Governance
+          <StatusPill variant="success" onClick={() => handleNavigation('/governance')}>
+            Governance Panel
           </StatusPill>
-          <StatusPill variant="warning" onClick={() => handleNavigation('setup')}>
-            Setup finale
+          <StatusPill variant="info" onClick={() => handleNavigation('/protocol')}>
+            Trading Protocol
           </StatusPill>
         </div>
 
@@ -71,9 +91,9 @@ const Dashboard: React.FC = () => {
           <Button 
             size="lg" 
             className="bg-vita-gradient hover:shadow-vita-glow transition-all duration-300 px-8 py-3 text-base font-medium"
-            onClick={() => handleNavigation('platform')}
+            onClick={() => handleNavigation('/communication')}
           >
-            Entra nella Piattaforma →
+            Enter Communication Hub →
           </Button>
         </div>
       </main>
@@ -82,9 +102,13 @@ const Dashboard: React.FC = () => {
       <footer className="fixed bottom-0 left-0 right-0 border-t border-border bg-background/80 backdrop-blur-sm">
         <div className="vita-container py-3">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <div>• SISTEMA CARICATO E PRONTO ALL'USO</div>
+            <div>• VITA PLATFORM READY</div>
             <div>v2.4.1</div>
-            <div>Skip</div>
+            <div className="flex items-center space-x-2">
+              <span>Role: {user?.role}</span>
+              <span>•</span>
+              <span>Votes: {user?.votes}</span>
+            </div>
           </div>
         </div>
       </footer>
