@@ -1,0 +1,69 @@
+You are extending the backend of the VITA trading platform (FastAPI + PostgreSQL) to fetch real-time market data and store it in the database.
+
+Your task is to implement a **real-time data ingestion module** that runs on a schedule and retrieves:
+
+---
+
+## ✅ DATA SOURCES TO CONNECT
+1. **OHLC price data** for 35+ instruments (Forex, Indici, Commodities, Crypto)
+   - Source: Yahoo Finance API or `yfinance` Python package
+   - Frequency: every 15 minutes
+
+2. **Economic calendar data**
+   - Source: ForexFactory (HTML scraping or API if available)
+   - Frequency: every hour
+
+3. **COT Reports**
+   - Source: CFTC (Commitment of Traders)
+   - Frequency: weekly (update on Friday)
+
+4. **News headlines**
+   - Source: financial RSS (e.g., Bloomberg, Reuters, Investing.com)
+   - Frequency: every 10 minutes
+
+---
+
+## 🛠 TASKS
+
+1. Create a Python module `data_fetcher.py` with the following:
+   - `fetch_prices()` – OHLC data for configured assets
+   - `fetch_calendar()` – economic events with time, country, impact, forecast/actual
+   - `fetch_cot_reports()` – positions by category
+   - `fetch_news()` – latest headlines and summaries
+
+2. Create a task scheduler using:
+   - `APScheduler` or `Celery + Beat` for production-like scheduling
+   - or use `asyncio` loops if staying lightweight
+
+3. Store all fetched data into appropriate DB tables:
+   - `prices` (asset, timeframe, open, high, low, close, volume, timestamp)
+   - `economic_events` (country, title, impact, actual, forecast, timestamp)
+   - `cot_data` (symbol, long, short, net, trader_type, report_date)
+   - `news_items` (headline, source, link, time)
+
+4. Make this ingestion module:
+   - Run automatically in the background
+   - Be callable via manual `GET /api/update-data` endpoint for testing
+
+---
+
+## BONUS
+
+- Add a configuration file to manage:
+  - Instruments list
+  - Fetch intervals
+  - API keys if needed (store in `.env` or Replit Secrets)
+
+- Add logging and error handling
+- Return a status log with last fetch timestamps
+
+---
+
+## FUTURE INTEGRATION
+This real-time data will be used to:
+- Feed AI trade proposal engine
+- Display live impact per asset
+- Generate vectorized inputs per currency
+- Alert the trading floor via in-app overlays
+
+Start with `OHLC` and `ForexFactory` first, then add COT and news.

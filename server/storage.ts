@@ -1,9 +1,12 @@
 import { 
   users, clients, trades, proposals, votes, chatMessages, alerts,
+  prices, economicEvents, cotData, newsItems,
   type User, type InsertUser, type Client, type InsertClient,
   type Trade, type InsertTrade, type Proposal, type InsertProposal,
   type Vote, type InsertVote, type ChatMessage, type InsertChatMessage,
-  type Alert, type InsertAlert
+  type Alert, type InsertAlert, type Price, type InsertPrice,
+  type EconomicEvent, type InsertEconomicEvent, type CotData, type InsertCotData,
+  type NewsItem, type InsertNewsItem
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
@@ -45,6 +48,13 @@ export interface IStorage {
   getAlertsByUser(userId: number): Promise<Alert[]>;
   createAlert(alert: InsertAlert): Promise<Alert>;
   markAlertAsRead(id: number): Promise<void>;
+  
+  // Market data operations
+  getPrices(symbol?: string, timeframe?: string, limit?: number): Promise<Price[]>;
+  getLatestPrice(symbol: string): Promise<Price | undefined>;
+  getEconomicEvents(impact?: string, limit?: number): Promise<EconomicEvent[]>;
+  getCOTData(symbol?: string, limit?: number): Promise<CotData[]>;
+  getNews(limit?: number): Promise<NewsItem[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -204,6 +214,65 @@ export class DatabaseStorage implements IStorage {
       .update(alerts)
       .set({ isRead: true })
       .where(eq(alerts.id, id));
+  }
+
+  // Market data operations
+  async getPrices(symbol?: string, timeframe?: string, limit: number = 100): Promise<Price[]> {
+    let query = db.select().from(prices);
+    
+    if (symbol) {
+      query = query.where(eq(prices.symbol, symbol));
+    }
+    if (timeframe) {
+      query = query.where(eq(prices.timeframe, timeframe));
+    }
+    
+    return await query
+      .orderBy(desc(prices.timestamp))
+      .limit(limit);
+  }
+
+  async getLatestPrice(symbol: string): Promise<Price | undefined> {
+    const [price] = await db
+      .select()
+      .from(prices)
+      .where(eq(prices.symbol, symbol))
+      .orderBy(desc(prices.timestamp))
+      .limit(1);
+    
+    return price || undefined;
+  }
+
+  async getEconomicEvents(impact?: string, limit: number = 50): Promise<EconomicEvent[]> {
+    let query = db.select().from(economicEvents);
+    
+    if (impact) {
+      query = query.where(eq(economicEvents.impact, impact));
+    }
+    
+    return await query
+      .orderBy(desc(economicEvents.eventTime))
+      .limit(limit);
+  }
+
+  async getCOTData(symbol?: string, limit: number = 50): Promise<CotData[]> {
+    let query = db.select().from(cotData);
+    
+    if (symbol) {
+      query = query.where(eq(cotData.symbol, symbol));
+    }
+    
+    return await query
+      .orderBy(desc(cotData.reportDate))
+      .limit(limit);
+  }
+
+  async getNews(limit: number = 50): Promise<NewsItem[]> {
+    return await db
+      .select()
+      .from(newsItems)
+      .orderBy(desc(newsItems.publishedAt))
+      .limit(limit);
   }
 }
 

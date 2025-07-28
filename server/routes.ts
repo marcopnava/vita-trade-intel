@@ -3,11 +3,17 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { seedDatabase } from "./seed";
 import { insertUserSchema, insertClientSchema, insertTradeSchema, insertProposalSchema } from "../shared/schema";
+import { taskScheduler } from "./scheduler/taskScheduler";
+import { marketDataFetcher } from "./data/dataFetcher";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Initialize database with seed data on first run
   try {
     await seedDatabase();
+    
+    // Start the market data scheduler
+    taskScheduler.startScheduler();
+    console.log("✅ Market data scheduler started");
   } catch (error) {
     console.log("Database seeding skipped or failed:", error);
   }
@@ -183,6 +189,114 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Get alerts error:", error);
       res.status(500).json({ error: "Failed to fetch alerts" });
+    }
+  });
+
+  // Market data endpoints
+  app.get("/api/market/prices", async (req, res) => {
+    try {
+      const { symbol, timeframe, limit } = req.query;
+      const prices = await storage.getPrices(
+        symbol as string, 
+        timeframe as string, 
+        limit ? parseInt(limit as string) : undefined
+      );
+      res.json(prices);
+    } catch (error) {
+      console.error("Get prices error:", error);
+      res.status(500).json({ error: "Failed to fetch prices" });
+    }
+  });
+
+  app.get("/api/market/price/:symbol", async (req, res) => {
+    try {
+      const { symbol } = req.params;
+      const price = await storage.getLatestPrice(symbol);
+      if (!price) {
+        return res.status(404).json({ error: "Price not found" });
+      }
+      res.json(price);
+    } catch (error) {
+      console.error("Get latest price error:", error);
+      res.status(500).json({ error: "Failed to fetch latest price" });
+    }
+  });
+
+  app.get("/api/market/events", async (req, res) => {
+    try {
+      const { impact, limit } = req.query;
+      const events = await storage.getEconomicEvents(
+        impact as string,
+        limit ? parseInt(limit as string) : undefined
+      );
+      res.json(events);
+    } catch (error) {
+      console.error("Get economic events error:", error);
+      res.status(500).json({ error: "Failed to fetch economic events" });
+    }
+  });
+
+  app.get("/api/market/cot", async (req, res) => {
+    try {
+      const { symbol, limit } = req.query;
+      const cotData = await storage.getCOTData(
+        symbol as string,
+        limit ? parseInt(limit as string) : undefined
+      );
+      res.json(cotData);
+    } catch (error) {
+      console.error("Get COT data error:", error);
+      res.status(500).json({ error: "Failed to fetch COT data" });
+    }
+  });
+
+  app.get("/api/market/news", async (req, res) => {
+    try {
+      const { limit } = req.query;
+      const news = await storage.getNews(
+        limit ? parseInt(limit as string) : undefined
+      );
+      res.json(news);
+    } catch (error) {
+      console.error("Get news error:", error);
+      res.status(500).json({ error: "Failed to fetch news" });
+    }
+  });
+
+  // Manual data update endpoints
+  app.post("/api/update-data", async (req, res) => {
+    try {
+      const { type = 'all' } = req.body;
+      
+      console.log(`🔄 Manual data update triggered: ${type}`);
+      await taskScheduler.triggerFetch(type);
+      
+      res.json({ 
+        success: true, 
+        message: `Data update completed for: ${type}`,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Manual data update error:", error);
+      res.status(500).json({ error: "Data update failed" });
+    }
+  });
+
+  app.get("/api/data-status", async (req, res) => {
+    try {
+      const [dataStatus, schedulerStatus] = await Promise.all([
+        marketDataFetcher.getDataStatus(),
+        Promise.resolve(taskScheduler.getStatus())
+      ]);
+      
+      res.json({
+        data: dataStatus,
+        scheduler: schedulerStatus,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Get data status error:", error);
+      res.status(500).json({ error: "Failed to get data status" });
     }
   });
 

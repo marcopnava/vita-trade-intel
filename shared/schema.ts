@@ -218,3 +218,83 @@ export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
 export type ChatMessage = typeof chatMessages.$inferSelect;
 export type InsertAlert = z.infer<typeof insertAlertSchema>;
 export type Alert = typeof alerts.$inferSelect;
+
+// Market data tables
+export const prices = pgTable("prices", {
+  id: serial("id").primaryKey(),
+  symbol: text("symbol").notNull(),
+  timeframe: text("timeframe").notNull(), // '15m', '1h', '4h', '1d'
+  open: numeric("open", { precision: 15, scale: 5 }).notNull(),
+  high: numeric("high", { precision: 15, scale: 5 }).notNull(),
+  low: numeric("low", { precision: 15, scale: 5 }).notNull(),
+  close: numeric("close", { precision: 15, scale: 5 }).notNull(),
+  volume: numeric("volume", { precision: 20, scale: 2 }),
+  timestamp: timestamp("timestamp").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const economicEvents = pgTable("economic_events", {
+  id: serial("id").primaryKey(),
+  country: text("country").notNull(),
+  title: text("title").notNull(),
+  impact: text("impact").notNull(), // 'low', 'medium', 'high'
+  actual: text("actual"),
+  forecast: text("forecast"),
+  previous: text("previous"),
+  eventTime: timestamp("event_time").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const cotData = pgTable("cot_data", {
+  id: serial("id").primaryKey(),
+  symbol: text("symbol").notNull(),
+  traderType: text("trader_type").notNull(), // 'commercial', 'non_commercial', 'retail'
+  longPositions: numeric("long_positions", { precision: 15, scale: 2 }).notNull(),
+  shortPositions: numeric("short_positions", { precision: 15, scale: 2 }).notNull(),
+  netPositions: numeric("net_positions", { precision: 15, scale: 2 }).notNull(),
+  reportDate: timestamp("report_date").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const newsItems = pgTable("news_items", {
+  id: serial("id").primaryKey(),
+  headline: text("headline").notNull(),
+  summary: text("summary"),
+  source: text("source").notNull(),
+  link: text("link").notNull().unique(),
+  publishedAt: timestamp("published_at").notNull(),
+  sentiment: text("sentiment"), // 'positive', 'negative', 'neutral'
+  impact: text("impact"), // 'high', 'medium', 'low'
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Market data insert schemas
+export const insertPriceSchema = createInsertSchema(prices).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertEconomicEventSchema = createInsertSchema(economicEvents).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertCotDataSchema = createInsertSchema(cotData).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertNewsItemSchema = createInsertSchema(newsItems).omit({
+  id: true,
+  createdAt: true,
+});
+
+// Market data types
+export type InsertPrice = z.infer<typeof insertPriceSchema>;
+export type Price = typeof prices.$inferSelect;
+export type InsertEconomicEvent = z.infer<typeof insertEconomicEventSchema>;
+export type EconomicEvent = typeof economicEvents.$inferSelect;
+export type InsertCotData = z.infer<typeof insertCotDataSchema>;
+export type CotData = typeof cotData.$inferSelect;
+export type InsertNewsItem = z.infer<typeof insertNewsItemSchema>;
+export type NewsItem = typeof newsItems.$inferSelect;
