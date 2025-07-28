@@ -1,0 +1,114 @@
+You are building a full-stack trading intelligence platform called **VITA**. It must be structured in React + TailwindCSS for the frontend, and FastAPI or any scalable backend for data logic.
+
+Integrate the following features step by step:
+
+---
+
+## 1. 📈 TradingView Charts Integration
+
+Create a dynamic page called `MarketCharts.tsx` with a responsive grid. Embed **TradingView widgets** for these 35 assets:
+
+### Forex:
+EUR/USD, GBP/USD, AUD/USD, NZD/USD, USD/JPY, USD/CHF, USD/CAD, EUR/JPY, GBP/JPY, AUD/JPY, NZD/JPY, CAD/JPY, EURNZD, AUDNZD, EURCAD, EURAUD
+
+### Indices:
+SPX (S&P 500), US100, DAX, US500, FTSEMIB, JP225
+
+### Commodities:
+XAUUSD, XAGUSD, USOIL, NGAS, CORN, WHEAT, COFFEE, COCOA, SUGAR, SOYBEAN
+
+### Crypto:
+BTCUSD, ETHUSD
+
+### Bond/Extra:
+US10Y, XPTUSD
+
+Use [TradingView Widget API](https://www.tradingview.com/widget/advanced-chart/) with symbol configuration like:  
+`"FOREXCOM:EURUSD"` or `"OANDA:BTCUSD"`
+
+Make charts collapsible and searchable.
+
+---
+
+## 2. 🧾 Portfolio Aggregation View
+
+Create a section `ClientPortfolios.tsx` with:
+- Aggregated view: total balance, equity, open PnL
+- Per-client cards with:
+  - Account ID
+  - Initial deposit
+  - Current balance
+  - Open PnL
+  - Total profit
+
+Use mock data initially: ~40 client objects.
+
+Allow toggling between **Aggregated** and **Individual** view.
+
+---
+
+## 3. 🧠 Asset Analysis Section
+
+Create a section called `AssetIntelligence.tsx`.
+
+For each major currency or commodity (e.g., USD, EUR, GOLD):
+- Show embedded TradingView chart (e.g., DXY for USD)
+- Show **AI-generated sentence** (mock for now):
+  > "USD strength is influenced by 10Y yields and macro CPI divergence."
+- Allow tagging of long/short sentiment per asset
+- Future-proof for vector-based signal strength
+
+---
+
+## 4. 💰 Profit-Sharing Model
+
+For each client in portfolio view:
+- Add a setting:
+  - "Profit-sharing %" (e.g., 20%)
+- On the profit column, display:
+  - Gross profit (P&L)
+  - Net profit for VITA = `(profit - deposit) * percentage`
+  - Rollover this for monthly, YTD, all-time
+
+Use client config stored in local DB or mock JSON.
+
+---
+
+## 5. 👤 User Registration (Trading Floor Members)
+
+Create a new registration form `RegisterUser.tsx`:
+
+Ask for:
+- Email
+- Password (with confirm)
+- First Name
+- Last Name
+- Phone Number
+
+On submit:
+- Create user profile
+- Store securely (JWT or hash password)
+- Show profile page after login
+- Save phone number for future SMS alerts
+
+Use backend endpoint `/auth/register` for real handling.
+
+---
+
+## 6. 📊 SL/TP Structure for Trades
+
+Each **approved operation** should allow:
+- Stop Loss (SL)
+- Take Profit 1
+- Take Profit 2
+- Take Profit 3
+
+Add form on trade creation or approval panel:
+```ts
+{
+  asset: "EURUSD",
+  direction: "buy",
+  entry: 1.0850,
+  stop_loss: 1.0750,
+  take_profit: [1.0950, 1.1050, 1.1200]
+}
