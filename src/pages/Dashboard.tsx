@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { VitaLogo } from '@/components/VitaLogo';
 import { WorldClocks } from '@/components/WorldClocks';
 import { StatusPill } from '@/components/StatusPill';
+import AlertsOverlay from '@/components/AlertsOverlay';
 import { Button } from '@/components/ui/button';
-import { LogOut } from 'lucide-react';
+import { LogOut, Bell } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const [alertsOpen, setAlertsOpen] = useState(false);
 
   const handleNavigation = (route: string) => {
     navigate(route);
@@ -41,15 +43,26 @@ const Dashboard: React.FC = () => {
               Welcome back, {user?.name}
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleLogout}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setAlertsOpen(true)}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <Bell className="w-4 h-4 mr-2" />
+              Alerts
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleLogout}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -112,6 +125,11 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      <AlertsOverlay 
+        isOpen={alertsOpen}
+        onClose={() => setAlertsOpen(false)}
+      />
     </div>
   );
 };
