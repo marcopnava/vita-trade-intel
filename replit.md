@@ -55,6 +55,8 @@ Preferred communication style: Simple, everyday language.
 - PostgreSQL database with comprehensive trading schema
 - Type-safe data models with Zod validation schemas
 - Complete CRUD operations through DatabaseStorage interface
+- Real-time market data ingestion from Yahoo Finance, RSS feeds
+- Automated data fetching: prices (15min), news (10min), economic events (hourly)
 - Seeded with realistic trading data for development
 
 ## Data Flow
@@ -96,7 +98,10 @@ Preferred communication style: Simple, everyday language.
 
 ### Trading Specific
 - **TradingView Widgets**: Market chart integration
-- **Financial data simulation**: Mock market data generators
+- **Yahoo Finance API**: Real-time OHLC price data for 35+ instruments
+- **RSS Parser**: Financial news from multiple sources
+- **Node-cron**: Automated data fetching scheduler
+- **Cheerio**: Economic calendar scraping from ForexFactory
 
 ### Development Tools
 - **Vite**: Build tool and dev server

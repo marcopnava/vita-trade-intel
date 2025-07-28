@@ -97,6 +97,9 @@ const Dashboard: React.FC = () => {
           <StatusPill variant="info" onClick={() => handleNavigation('/protocol')}>
             Trading Protocol
           </StatusPill>
+          <StatusPill variant="primary" onClick={() => handleNavigation('/market-data')}>
+            Real-Time Data
+          </StatusPill>
         </div>
 
         {/* Main CTA */}

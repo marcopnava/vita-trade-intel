@@ -12,6 +12,7 @@ import Governance from "./pages/Governance";
 import Communication from "./pages/Communication";
 import Analytics from "./pages/Analytics";
 import Protocol from "./pages/Protocol";
+import MarketData from "./pages/MarketData";  
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -85,6 +86,11 @@ const App = () => (
           <Route path="/protocol">
             <ProtectedRoute>
               <Protocol />
+            </ProtectedRoute>
+          </Route>
+          <Route path="/market-data">
+            <ProtectedRoute>
+              <MarketData />
             </ProtectedRoute>
           </Route>
           <Route>

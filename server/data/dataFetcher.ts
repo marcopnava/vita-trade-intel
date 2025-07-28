@@ -5,7 +5,7 @@ import { format, subDays, isValid } from 'date-fns';
 import { db } from '../db';
 import { prices, economicEvents, cotData, newsItems } from '../../shared/schema';
 import { ALL_INSTRUMENTS, FOREX_PAIRS, FETCH_INTERVALS } from '../config/instruments';
-import { eq, and, gte } from 'drizzle-orm';
+import { eq, and, gte, sql } from 'drizzle-orm';
 
 const rssParser = new Parser();
 
@@ -355,25 +355,25 @@ export class MarketDataFetcher {
    */
   async getDataStatus(): Promise<any> {
     try {
-      const [priceCount] = await db.select({ count: 'count(*)' }).from(prices);
-      const [eventCount] = await db.select({ count: 'count(*)' }).from(economicEvents);
-      const [cotCount] = await db.select({ count: 'count(*)' }).from(cotData);
-      const [newsCount] = await db.select({ count: 'count(*)' }).from(newsItems);
+      const [priceCount] = await db.select({ count: sql<number>`count(*)` }).from(prices);
+      const [eventCount] = await db.select({ count: sql<number>`count(*)` }).from(economicEvents);
+      const [cotCount] = await db.select({ count: sql<number>`count(*)` }).from(cotData);
+      const [newsCount] = await db.select({ count: sql<number>`count(*)` }).from(newsItems);
 
       // Get latest timestamps
       const latestPrice = await db.select({ timestamp: prices.timestamp })
         .from(prices)
-        .orderBy(prices.timestamp)
+        .orderBy(sql`${prices.timestamp} DESC`)
         .limit(1);
       
       const latestEvent = await db.select({ timestamp: economicEvents.createdAt })
         .from(economicEvents)
-        .orderBy(economicEvents.createdAt)
+        .orderBy(sql`${economicEvents.createdAt} DESC`)
         .limit(1);
 
       const latestNews = await db.select({ timestamp: newsItems.publishedAt })
         .from(newsItems)
-        .orderBy(newsItems.publishedAt)
+        .orderBy(sql`${newsItems.publishedAt} DESC`)
         .limit(1);
 
       return {
