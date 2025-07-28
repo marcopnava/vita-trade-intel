@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Loader2 } from 'lucide-react';
 
 const Login: React.FC = () => {
-  const navigate = useNavigate();
+  const [location, setLocation] = useLocation();
   const { login, isLoading } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
@@ -24,7 +24,7 @@ const Login: React.FC = () => {
     const result = await login(formData.email, formData.password);
     
     if (result.success) {
-      navigate('/dashboard');
+      setLocation('/dashboard');
     } else {
       setError(result.error || 'Login failed');
     }

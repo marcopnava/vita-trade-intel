@@ -13,7 +13,7 @@ const Governance: React.FC = () => {
             <Button 
               variant="ghost" 
               size="sm"
-              onClick={() => window.location.href = '/'}
+              onClick={() => window.location.href = '/dashboard'}
               className="text-muted-foreground hover:text-foreground"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />

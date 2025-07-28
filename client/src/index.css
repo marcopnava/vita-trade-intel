@@ -158,15 +158,15 @@
   
   /* Status Indicators */
   .status-open {
-    @apply bg-success/20 text-success border-success/30;
+    @apply bg-green-500/20 text-green-500 border-green-500/30;
   }
   
   .status-closed {
-    @apply bg-destructive/20 text-destructive border-destructive/30;
+    @apply bg-red-500/20 text-red-500 border-red-500/30;
   }
   
   .status-maintenance {
-    @apply bg-warning/20 text-warning border-warning/30;
+    @apply bg-yellow-500/20 text-yellow-500 border-yellow-500/30;
   }
 }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import { useAuth } from '@/hooks/useAuth';
 import { VitaLogo } from '@/components/VitaLogo';
 import { WorldClocks } from '@/components/WorldClocks';
@@ -9,17 +9,17 @@ import { Button } from '@/components/ui/button';
 import { LogOut, Bell } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
+  const [location, setLocation] = useLocation();
   const { user, logout } = useAuth();
   const [alertsOpen, setAlertsOpen] = useState(false);
 
   const handleNavigation = (route: string) => {
-    navigate(route);
+    setLocation(route);
   };
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    setLocation('/login');
   };
 
   const getCurrentDate = () => {

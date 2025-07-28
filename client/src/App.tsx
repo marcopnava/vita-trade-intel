@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Router, Route, Switch } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -30,7 +30,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     );
   }
   
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    window.location.href = "/login";
+    return null;
+  }
+  
+  return <>{children}</>;
 };
 
 const App = () => (
@@ -38,69 +43,55 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/portfolio" 
-            element={
-              <ProtectedRoute>
-                <Portfolio />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/ai-engine" 
-            element={
-              <ProtectedRoute>
-                <AIEngine />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/governance" 
-            element={
-              <ProtectedRoute>
-                <Governance />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/communication" 
-            element={
-              <ProtectedRoute>
-                <Communication />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/analytics" 
-            element={
-              <ProtectedRoute>
-                <Analytics />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/protocol" 
-            element={
-              <ProtectedRoute>
-                <Protocol />
-              </ProtectedRoute>
-            } 
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <Router>
+        <Switch>
+          <Route path="/login" component={Login} />
+          <Route path="/">
+            {() => {
+              window.location.href = "/dashboard";
+              return null;
+            }}
+          </Route>
+          <Route path="/dashboard">
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          </Route>
+          <Route path="/portfolio">
+            <ProtectedRoute>
+              <Portfolio />
+            </ProtectedRoute>
+          </Route>
+          <Route path="/ai-engine">
+            <ProtectedRoute>
+              <AIEngine />
+            </ProtectedRoute>
+          </Route>
+          <Route path="/governance">
+            <ProtectedRoute>
+              <Governance />
+            </ProtectedRoute>
+          </Route>
+          <Route path="/communication">
+            <ProtectedRoute>
+              <Communication />
+            </ProtectedRoute>
+          </Route>
+          <Route path="/analytics">
+            <ProtectedRoute>
+              <Analytics />
+            </ProtectedRoute>
+          </Route>
+          <Route path="/protocol">
+            <ProtectedRoute>
+              <Protocol />
+            </ProtectedRoute>
+          </Route>
+          <Route>
+            <NotFound />
+          </Route>
+        </Switch>
+      </Router>
     </TooltipProvider>
   </QueryClientProvider>
 );
