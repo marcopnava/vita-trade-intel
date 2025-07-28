@@ -74,6 +74,101 @@ const Communication: React.FC = () => {
   const filteredMessages = messages.filter(msg => msg.channel === activeTab);
   const otherUsers = MOCK_USERS.filter(u => u.id !== user?.id);
 
+  const renderMessages = () => (
+    <ScrollArea className="flex-1 p-4">
+      <div className="space-y-4">
+        {filteredMessages.map((message) => {
+          const isCurrentUser = message.user_id === user?.id;
+          return (
+            <div
+              key={message.id}
+              className={`flex gap-3 ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
+            >
+              {!isCurrentUser && (
+                <Avatar className="w-8 h-8 mt-1">
+                  <AvatarFallback className="text-xs bg-primary/10 text-primary">
+                    {getInitials(message.user_name)}
+                  </AvatarFallback>
+                </Avatar>
+              )}
+              
+              <div className={`max-w-[70%] ${isCurrentUser ? 'order-1' : ''}`}>
+                {!isCurrentUser && (
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm font-medium text-foreground">
+                      {message.user_name}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {formatTime(message.created_at)}
+                    </span>
+                    {message.type === 'proposal' && (
+                      <Badge variant="outline" className="text-xs">
+                        Proposal
+                      </Badge>
+                    )}
+                  </div>
+                )}
+                
+                <div
+                  className={`rounded-lg p-3 ${
+                    isCurrentUser
+                      ? 'bg-primary text-primary-foreground'
+                      : message.type === 'proposal'
+                      ? 'bg-primary/10 border border-primary/20'
+                      : 'bg-muted'
+                  }`}
+                >
+                  <div className="flex items-start gap-2">
+                    {getMessageTypeIcon(message.type)}
+                    <span className="text-sm leading-relaxed">
+                      {message.content}
+                    </span>
+                  </div>
+                </div>
+                
+                {isCurrentUser && (
+                  <div className="text-xs text-muted-foreground mt-1 text-right">
+                    {formatTime(message.created_at)}
+                  </div>
+                )}
+              </div>
+              
+              {isCurrentUser && (
+                <Avatar className="w-8 h-8 mt-1">
+                  <AvatarFallback className="text-xs bg-primary text-primary-foreground">
+                    {getInitials(message.user_name)}
+                  </AvatarFallback>
+                </Avatar>
+              )}
+            </div>
+          );
+        })}
+        <div ref={messagesEndRef} />
+      </div>
+    </ScrollArea>
+  );
+
+  const renderMessageInput = () => (
+    <div className="p-4 border-t border-border">
+      <div className="flex gap-2">
+        <Input
+          placeholder={`Message ${activeTab === 'general' ? 'trading floor' : 'market alerts'}...`}
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          onKeyPress={handleKeyPress}
+          className="flex-1"
+        />
+        <Button
+          onClick={handleSendMessage}
+          disabled={!newMessage.trim()}
+          size="sm"
+        >
+          <Send className="w-4 h-4" />
+        </Button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border">
@@ -126,8 +221,8 @@ const Communication: React.FC = () => {
 
           {/* Chat Area */}
           <Card className="vita-card col-span-3 flex flex-col">
-            <div className="p-4 border-b border-border">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">
+              <div className="p-4 border-b border-border">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="general" className="flex items-center gap-2">
                     <MessageCircle className="w-4 h-4" />
@@ -138,103 +233,18 @@ const Communication: React.FC = () => {
                     Market Alerts
                   </TabsTrigger>
                 </TabsList>
-              </Tabs>
-            </div>
-
-            <TabsContent value={activeTab} className="flex-1 flex flex-col mt-0">
-              {/* Messages */}
-              <ScrollArea className="flex-1 p-4">
-                <div className="space-y-4">
-                  {filteredMessages.map((message) => {
-                    const isCurrentUser = message.user_id === user?.id;
-                    return (
-                      <div
-                        key={message.id}
-                        className={`flex gap-3 ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
-                      >
-                        {!isCurrentUser && (
-                          <Avatar className="w-8 h-8 mt-1">
-                            <AvatarFallback className="text-xs bg-primary/10 text-primary">
-                              {getInitials(message.user_name)}
-                            </AvatarFallback>
-                          </Avatar>
-                        )}
-                        
-                        <div className={`max-w-[70%] ${isCurrentUser ? 'order-1' : ''}`}>
-                          {!isCurrentUser && (
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-sm font-medium text-foreground">
-                                {message.user_name}
-                              </span>
-                              <span className="text-xs text-muted-foreground">
-                                {formatTime(message.created_at)}
-                              </span>
-                              {message.type === 'proposal' && (
-                                <Badge variant="outline" className="text-xs">
-                                  Proposal
-                                </Badge>
-                              )}
-                            </div>
-                          )}
-                          
-                          <div
-                            className={`rounded-lg p-3 ${
-                              isCurrentUser
-                                ? 'bg-primary text-primary-foreground'
-                                : message.type === 'proposal'
-                                ? 'bg-primary/10 border border-primary/20'
-                                : 'bg-muted'
-                            }`}
-                          >
-                            <div className="flex items-start gap-2">
-                              {getMessageTypeIcon(message.type)}
-                              <span className="text-sm leading-relaxed">
-                                {message.content}
-                              </span>
-                            </div>
-                          </div>
-                          
-                          {isCurrentUser && (
-                            <div className="text-xs text-muted-foreground mt-1 text-right">
-                              {formatTime(message.created_at)}
-                            </div>
-                          )}
-                        </div>
-                        
-                        {isCurrentUser && (
-                          <Avatar className="w-8 h-8 mt-1">
-                            <AvatarFallback className="text-xs bg-primary text-primary-foreground">
-                              {getInitials(message.user_name)}
-                            </AvatarFallback>
-                          </Avatar>
-                        )}
-                      </div>
-                    );
-                  })}
-                  <div ref={messagesEndRef} />
-                </div>
-              </ScrollArea>
-
-              {/* Message Input */}
-              <div className="p-4 border-t border-border">
-                <div className="flex gap-2">
-                  <Input
-                    placeholder={`Message ${activeTab === 'general' ? 'trading floor' : 'market alerts'}...`}
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    className="flex-1"
-                  />
-                  <Button
-                    onClick={handleSendMessage}
-                    disabled={!newMessage.trim()}
-                    size="sm"
-                  >
-                    <Send className="w-4 h-4" />
-                  </Button>
-                </div>
               </div>
-            </TabsContent>
+
+              <TabsContent value="general" className="flex-1 flex flex-col mt-0">
+                {renderMessages()}
+                {renderMessageInput()}
+              </TabsContent>
+
+              <TabsContent value="alerts" className="flex-1 flex flex-col mt-0">
+                {renderMessages()}
+                {renderMessageInput()}
+              </TabsContent>
+            </Tabs>
           </Card>
         </div>
       </main>
