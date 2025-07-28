@@ -52,28 +52,33 @@ Preferred communication style: Simple, everyday language.
 - User presence and activity tracking
 
 ### Data Management
-- Mock data generators for development
-- Type-safe data models with Zod schemas
-- Simulated real-time updates for trading data
+- PostgreSQL database with comprehensive trading schema
+- Type-safe data models with Zod validation schemas
+- Complete CRUD operations through DatabaseStorage interface
+- Seeded with realistic trading data for development
 
 ## Data Flow
 
 ### Client-Server Communication
 1. Frontend makes API requests to Express backend
-2. Backend processes requests using storage interface
-3. Current implementation uses in-memory storage (MemStorage)
-4. Production ready for PostgreSQL via Drizzle ORM migration
+2. Backend processes requests using DatabaseStorage interface
+3. PostgreSQL database with full relational schema
+4. Real-time data persistence with proper transactions
 
 ### State Management Flow
 1. TanStack Query manages server state and caching
 2. Local component state for UI interactions
 3. Authentication state managed through custom hooks
-4. Real-time updates simulated with intervals
+4. Database-backed real-time updates
 
 ### Database Schema
-- Users table with role-based permissions
-- Extensible schema design for trading entities
-- Migration support through Drizzle Kit
+- **Users**: Authentication, roles, voting weights
+- **Clients**: Portfolio accounts with profit-sharing
+- **Trades**: Position tracking with P&L calculations
+- **Proposals**: Governance system for trade decisions
+- **Votes**: Democratic trade approval mechanism
+- **Chat Messages**: Communication channels
+- **Alerts**: Notification system
 
 ## External Dependencies
 
