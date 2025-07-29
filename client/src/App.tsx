@@ -12,7 +12,8 @@ import Governance from "./pages/Governance";
 import Communication from "./pages/Communication";
 import Analytics from "./pages/Analytics";
 import Protocol from "./pages/Protocol";
-import MarketData from "./pages/MarketData";  
+import MarketData from "./pages/MarketData";
+import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App = () => (
       <Router>
         <Switch>
           <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
           <Route path="/">
             {() => {
               window.location.href = "/dashboard";

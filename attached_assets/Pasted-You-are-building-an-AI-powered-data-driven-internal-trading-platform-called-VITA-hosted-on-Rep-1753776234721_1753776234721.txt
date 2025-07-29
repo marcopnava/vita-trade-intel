@@ -1,0 +1,152 @@
+You are building an AI-powered, data-driven internal trading platform called **VITA**, hosted on Replit. The platform is used by 4 traders: Marco Paolo Nava, Francesco Casella, Giorgio Greco, Andrea Roberto.
+
+You already have:
+
+- FastAPI backend with PostgreSQL
+- Live market data from Yahoo Finance, economic calendar, COT, and news
+- A React + Tailwind frontend styled in the VITA aesthetic
+- Working trade proposals, chat, alerts, and portfolio tracking
+
+Now continue development with the following **full-system upgrades**:
+
+---
+
+## 1. ✅ SIGN UP / SIGN IN FLOW
+
+### Requirements:
+- Landing page with:
+  - **Login form** (email + password)
+  - **Signup link** underneath
+- Signup form (`/signup`):
+  - Fields: First Name, Last Name, Email, Password
+  - Select trader from dropdown: Marco Paolo Nava, Francesco Casella, Giorgio Greco, Andrea Roberto
+  - Store user profile in `users` table
+  - On login: load user context (ID + role + email + name)
+
+Implement backend with `/auth/register` and `/auth/login`, return JWT token, store in localStorage.
+
+---
+
+## 2. ✅ METATRADER4 ACCOUNT INTEGRATION (Future Optional)
+
+**Prepare backend schema**:
+- `mt4_accounts` table: user_id, login, password, broker_server
+- Associate each user with their MT4 account
+- Build optional `/mt4/connect` module (for future integration)
+
+📌 You will manually provide account credentials later for each trader, when integration is ready.
+
+---
+
+## 3. ✅ AI-POWERED TRADE PROPOSAL SYSTEM
+
+### Backend:
+- Create `asset_vectorizer.py`:
+  - Ingest latest OHLC, macro, news, COT per asset
+  - Build vector or context payload
+- Create `generate_trade_proposal()`:
+  - Call OpenAI GPT-4 with structured prompt
+  - Return entry, SL, TP1, TP2, TP3, rationale, confidence %
+- Store in `proposals` table
+
+### Frontend:
+- Page: `AIEngine.tsx`
+- Show latest proposals (table or cards)
+- Add refresh button → `/api/generate-proposal?asset=...`
+- Add vector chart: radar / bar showing confidence & direction
+
+---
+
+## 4. ✅ VETTORIALIZZATORE DELL’ASSET (SU PROMPT)
+
+Create a page `Vectorizer.tsx`:
+- Input: user types a free-text prompt (e.g. "What's driving EUR/USD now?")
+- Backend parses it, scores each asset from -1 (short) to +1 (long)
+- Display heatmap or bar for each asset:
+  - Example: DXY = -0.3, EURUSD = +0.7, GOLD = 0.0
+- Use OpenAI + cosine similarity to compute "vectorial weight"
+
+---
+
+## 5. ✅ CHARTING VIEW CON TUTTI I 35 STRUMENTI
+
+Page: `Charts.tsx`
+
+- Embed 35 TradingView charts (use widget API)
+- Instruments:
+  - Forex: EURUSD, GBPUSD, AUDUSD, etc.
+  - Indices: SPX, US100, DAX, etc.
+  - Commodities: GOLD, OIL, NGAS, etc.
+  - Crypto: BTCUSD, ETHUSD
+  - Bonds: US10Y
+- Allow tab or filter by category
+- Chart options: compact, toggle full-screen, draggable
+
+---
+
+## 6. ✅ ENTRY/SL/TP VISUALIZZATI SUI CHART
+
+For each **open trade** (from `trades` table):
+- Match symbol to TradingView chart
+- On chart render:
+  - Show horizontal lines for:
+    - Entry price
+    - Stop loss
+    - Take Profit 1, 2, 3
+  - Use TradingView overlay API (or simulate with chart config)
+  - Color-code: red (SL), green (TPs), white (entry)
+
+---
+
+## 7. ✅ PORTFOLIO LIVE UPDATES
+
+Ensure all interfaces reflect **live price updates**:
+- When OHLC data updates:
+  - Refresh displayed PnL per trade in `Portfolio.tsx`
+  - Update current market price
+  - Recalculate exposure
+- Use polling or socket (WebSocket optional)
+
+---
+
+## 8. ✅ UI ENHANCEMENT: DYNAMIC PAGE HIGHLIGHT
+
+On main layout (sidebar or navbar):
+- When user selects `Portfolio`, `Analytics`, `Charts`, `Governance`:
+  - Change background color or left indicator (highlight active section)
+  - Must **respect VITA design system**: sleek, elegant, minimal
+- Use Tailwind + conditional `className`
+
+---
+
+## 9. ✅ GOVERNANCE VOTING + ALERTS
+
+Each proposal:
+- Can be voted on by one of the 4 traders
+- Votes have weight (Francesco = 2, others = 1)
+- Show results, archive in `votes` table
+
+Each trade:
+- Stores SL and TP values
+- Backend emits alert if any level is touched
+- Alerts go to: `/alerts`, `toast.tsx`, and optionally SMS (future)
+
+---
+
+## BONUS – ROUTING & DEPLOYMENT
+
+- Ensure all pages are protected routes (JWT-authenticated)
+- After login → redirect to `/dashboard`
+- Global user context (React Context API) for trader data
+- LocalStorage for token + email + trader ID
+
+---
+
+## DELIVERABLES
+
+- Pages: `Signup`, `Login`, `Dashboard`, `AIEngine`, `Charts`, `Vectorizer`, `Portfolio`, `ClientView`, `Governance`
+- Backend endpoints:
+  - `/api/vectorize`, `/api/proposals`, `/api/users`, `/api/trades`, `/auth/...`
+- Database tables: users, proposals, trades, mt4_accounts, alerts, votes, vectors
+- UI styling consistent with VITA aesthetic
+- Optional: dockerized environment on Replit

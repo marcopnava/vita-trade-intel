@@ -14,39 +14,55 @@ export async function seedDatabase() {
       return;
     }
 
-    // Create users
+    // Create users with new schema
     const vitaUsers = await db.insert(users).values([
       {
         email: 'francesco.casella@vita.com',
         password: '$2b$10$hashed_password_here', // In production, properly hash passwords
-        name: 'Francesco Casella',
-        role: 'admin',
+        username: 'francesco-casella',
+        firstName: 'Francesco',
+        lastName: 'Casella',
+        displayName: 'Francesco Casella',
+        role: 'lead_trader',
         votes: 2,
-        phone: '+1234567890'
+        phone: '+1234567890',
+        isActive: true
       },
       {
         email: 'marco.nava@vita.com',
         password: '$2b$10$hashed_password_here',
-        name: 'Marco Paolo Nava',
-        role: 'trader',
+        username: 'marco-paolo-nava',
+        firstName: 'Marco Paolo',
+        lastName: 'Nava',
+        displayName: 'Marco Paolo Nava',
+        role: 'senior_trader',
         votes: 1,
-        phone: '+1234567891'
+        phone: '+1234567891',
+        isActive: true
       },
       {
         email: 'andrea.roberto@vita.com',
         password: '$2b$10$hashed_password_here',
-        name: 'Andrea Roberto',
+        username: 'andrea-roberto',
+        firstName: 'Andrea',
+        lastName: 'Roberto',
+        displayName: 'Andrea Roberto',
         role: 'trader',
         votes: 1,
-        phone: '+1234567892'
+        phone: '+1234567892',
+        isActive: true
       },
       {
         email: 'giorgio.greco@vita.com',
         password: '$2b$10$hashed_password_here',
-        name: 'Giorgio Greco',
+        username: 'giorgio-greco',
+        firstName: 'Giorgio',
+        lastName: 'Greco',
+        displayName: 'Giorgio Greco',
         role: 'trader',
         votes: 1,
-        phone: '+1234567893'
+        phone: '+1234567893',
+        isActive: true
       }
     ]).returning();
 

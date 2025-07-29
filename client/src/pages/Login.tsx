@@ -143,6 +143,20 @@ const Login: React.FC = () => {
           </div>
         </Card>
 
+        {/* Signup Link */}
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground">
+            Don't have an account?{' '}
+            <Button
+              variant="link"
+              className="p-0 h-auto font-semibold text-primary hover:underline"
+              onClick={() => setLocation('/signup')}
+            >
+              Sign up here
+            </Button>
+          </p>
+        </div>
+
         {/* Footer */}
         <div className="text-center text-xs text-muted-foreground">
           VITA Platform v2.4.1 • Internal Use Only
